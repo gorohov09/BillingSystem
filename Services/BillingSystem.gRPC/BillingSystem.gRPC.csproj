@@ -25,6 +25,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Data\BillingSystem.DAL\BillingSystem.DAL.csproj" />
+    <ProjectReference Include="..\BillingSystem.Interfaces\BillingSystem.Interfaces.csproj" />
+    <ProjectReference Include="..\BillingSystem.Services\BillingSystem.Services.csproj" />
   </ItemGroup>
 
 </Project>
