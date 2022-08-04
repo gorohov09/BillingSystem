@@ -8,5 +8,5 @@ public class CoinDomain : Entity
 {
     public string History { get; set; }
 
-    public UserProfileDomain UserProfile { get; set; }
+    public UserProfileDomain? UserProfile { get; set; }
 }
