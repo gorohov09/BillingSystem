@@ -1,12 +1,15 @@
+using BillingSystem.DAL.Context;
 using BillingSystem.gRPC.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Additional configuration is required to successfully run gRPC on macOS.
-// For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
+var services = builder.Services;
 
-// Add services to the container.
-builder.Services.AddGrpc();
+services.AddGrpc();
+
+services.AddDbContext<BillingSystemDB>(opt => 
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
 var app = builder.Build();
 
