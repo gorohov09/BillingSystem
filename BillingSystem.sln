@@ -19,6 +19,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillingSystem.Interfaces", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillingSystem.Services", "Services\BillingSystem.Services\BillingSystem.Services.csproj", "{38F2BB27-90B9-4728-8C17-DD01C324668D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{93F6BE02-6CDB-4494-8B3E-4AEA14501E04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillingSystem.TestConsole", "UI\BillingSystem.TestConsole\BillingSystem.TestConsole.csproj", "{8BAC91CB-0B98-4DB7-B13B-03D987C1FE1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,10 @@ Global
 		{38F2BB27-90B9-4728-8C17-DD01C324668D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38F2BB27-90B9-4728-8C17-DD01C324668D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38F2BB27-90B9-4728-8C17-DD01C324668D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BAC91CB-0B98-4DB7-B13B-03D987C1FE1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BAC91CB-0B98-4DB7-B13B-03D987C1FE1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BAC91CB-0B98-4DB7-B13B-03D987C1FE1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BAC91CB-0B98-4DB7-B13B-03D987C1FE1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +63,7 @@ Global
 		{8113E67C-7D26-4785-89BD-64084F4AC6B6} = {8EDB72ED-5D24-4539-A9A6-400AC7D01A8D}
 		{1EFD106D-B105-4995-B050-6A2139DC8106} = {FF114F8F-2178-4E82-B677-AE5BD8B461AD}
 		{38F2BB27-90B9-4728-8C17-DD01C324668D} = {FF114F8F-2178-4E82-B677-AE5BD8B461AD}
+		{8BAC91CB-0B98-4DB7-B13B-03D987C1FE1E} = {93F6BE02-6CDB-4494-8B3E-4AEA14501E04}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A202B2DC-4B37-4826-B1D2-907CFC9E81AD}
