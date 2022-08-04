@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\BillingSystem.Domain\BillingSystem.Domain.csproj" />
+    <ProjectReference Include="..\..\Data\BillingSystem.DAL\BillingSystem.DAL.csproj" />
+    <ProjectReference Include="..\BillingSystem.Interfaces\BillingSystem.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>
