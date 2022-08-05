@@ -2,10 +2,16 @@
 using Grpc.Net.Client;
 
 Console.WriteLine("Hellow wo");
+Thread.Sleep(1000);
 var none = new None();
 
 var grpcChannel = GrpcChannel.ForAddress("https://localhost:7175");
 var client = new Billing.Billing.BillingClient(grpcChannel);
+
+var response = await client.CoinsEmissionAsync(new EmissionAmount { Amount = 10});
+Console.WriteLine(response);
+
+Console.ReadLine();
 
 using (var clientData = client.ListUsers(none))
 {

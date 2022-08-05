@@ -1,4 +1,5 @@
 ﻿using Billing;
+using BillingSystem.Domain.ViewModels;
 using BillingSystem.Interfaces;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
@@ -29,9 +30,13 @@ namespace BillingSystem.gRPC.Services
             }
         }
 
-        public override Task<Response> CoinsEmission(EmissionAmount request, ServerCallContext context)
+        public override async Task<Response> CoinsEmission(EmissionAmount request, ServerCallContext context)
         {
-            return base.CoinsEmission(request, context);
+            var response = await _billingRepository.CoinsEmission(request.Amount);
+            if (response)
+                return await Task.FromResult(new Response { Status = Response.Types.Status.Ok, Comment = "Эмиссия выполнена успешно"}).ConfigureAwait(false);
+            else
+                return await Task.FromResult(new Response { Status = Response.Types.Status.Failed, Comment = "Эмиссия не выполнена" }).ConfigureAwait(false);
         }
 
         public override Task<Response> MoveCoins(MoveCoinsTransaction request, ServerCallContext context)

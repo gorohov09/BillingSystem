@@ -6,6 +6,6 @@ namespace BillingSystem.Interfaces
     {
         Task<IEnumerable<UserProfileViewModel>> GetUserProfiliesVm();
 
-        Task
+        Task<bool> CoinsEmission(long emissionAmount);
     }
 }
