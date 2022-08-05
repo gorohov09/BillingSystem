@@ -13,6 +13,7 @@ services.AddGrpc();
 services.AddTransient<IDbInitializer, DbInitializer>();
 services.AddDbContext<BillingSystemDB>(opt => 
     opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+services.AddScoped<IBillingRepository, BillingRepository>();
 
 var app = builder.Build();
 

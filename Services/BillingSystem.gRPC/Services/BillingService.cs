@@ -1,5 +1,5 @@
 ﻿using Billing;
-using BillingSystem.DAL.Context;
+using BillingSystem.Interfaces;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,23 +8,23 @@ namespace BillingSystem.gRPC.Services
     public class BillingService : Billing.Billing.BillingBase
     {
         private readonly ILogger<BillingService> _logger;
-        private readonly BillingSystemDB _db;
+        private readonly IBillingRepository _billingRepository;
 
-        public BillingService(ILogger<BillingService> logger, BillingSystemDB db)
+        public BillingService(ILogger<BillingService> logger, IBillingRepository billingRepository)
         {
             _logger = logger;
-            _db = db;
+            _billingRepository = billingRepository;
         }
 
         public override async Task ListUsers(None request, IServerStreamWriter<UserProfile> responseStream, ServerCallContext context)
         {
-            var userProfilies = await _db.UserProfiles.ToListAsync();
+            var userProfilies = await _billingRepository.GetUserProfiliesVm();
             foreach (var profile in userProfilies)
             {
                 await responseStream.WriteAsync(new UserProfile
                 {
                     Name = profile.Name,
-                    Amount = profile.Amount ?? 0,
+                    Amount = (long)profile.Amount,
                 });
             }
         }
