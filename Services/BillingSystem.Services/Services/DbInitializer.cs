@@ -1,6 +1,7 @@
 ﻿using BillingSystem.DAL.Context;
 using BillingSystem.Interfaces;
 using BillingSystem.Services.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace BillingSystem.Services.Services
@@ -22,6 +23,8 @@ namespace BillingSystem.Services.Services
 
             if (RemoveBefore)
                 await RemoveAsync(cancel).ConfigureAwait(false);
+
+            await _db.Database.MigrateAsync(cancel).ConfigureAwait(false);
 
             await InitializeUserProfiliesAsync(cancel).ConfigureAwait(false);
             _logger.LogInformation("Инициализация БД выполнена успешно");
