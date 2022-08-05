@@ -9,6 +9,6 @@ namespace BillingSystem.Interfaces
 {
     public interface IBillingRepository
     {
-        Task<UserProfileViewModel> GetUserProfilies();
+        Task<IEnumerable<UserProfileViewModel>> GetUserProfiliesVm();
     }
 }
