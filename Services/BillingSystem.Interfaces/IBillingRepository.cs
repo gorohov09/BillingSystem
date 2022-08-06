@@ -7,5 +7,7 @@ namespace BillingSystem.Interfaces
         Task<IEnumerable<UserProfileViewModel>> GetUserProfiliesVm();
 
         Task<bool> CoinsEmission(long emissionAmount);
+
+        Task<bool> MoveCoins(string srcUser, string dstUser, long amount);
     }
 }

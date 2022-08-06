@@ -1,8 +1,6 @@
 ﻿using Billing;
-using BillingSystem.Domain.ViewModels;
 using BillingSystem.Interfaces;
 using Grpc.Core;
-using Microsoft.EntityFrameworkCore;
 
 namespace BillingSystem.gRPC.Services
 {
@@ -39,9 +37,18 @@ namespace BillingSystem.gRPC.Services
                 return await Task.FromResult(new Response { Status = Response.Types.Status.Failed, Comment = "Эмиссия не выполнена" }).ConfigureAwait(false);
         }
 
-        public override Task<Response> MoveCoins(MoveCoinsTransaction request, ServerCallContext context)
+        public override async Task<Response> MoveCoins(MoveCoinsTransaction request, ServerCallContext context)
         {
-            return base.MoveCoins(request, context);
+            var response = await _billingRepository.MoveCoins(request.SrcUser, request.DstUser, request.Amount);
+            if (response)
+                return await Task.FromResult(new Response { Status = Response.Types.Status.Ok, 
+                    Comment = string.Format("Перемещение {0} мон. от {1} к {2} выполнено успешно", request.Amount, request.SrcUser, 
+                    request.DstUser) }).ConfigureAwait(false);
+            else
+                return await Task.FromResult(new Response { Status = Response.Types.Status.Failed, 
+                    Comment = string.Format("Перемещение {0} мон. от {1} к {2} не выполнено", request.Amount, request.SrcUser,
+                    request.DstUser)
+                }).ConfigureAwait(false);
         }
 
         public override Task<Coin> LongestHistoryCoin(None request, ServerCallContext context)
