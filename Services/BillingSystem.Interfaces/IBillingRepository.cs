@@ -9,5 +9,7 @@ namespace BillingSystem.Interfaces
         Task<bool> CoinsEmission(long emissionAmount);
 
         Task<bool> MoveCoins(string srcUser, string dstUser, long amount);
+
+        Task<CoinViewModel> LongestHistoryCoin();
     }
 }

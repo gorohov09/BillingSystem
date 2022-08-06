@@ -51,9 +51,10 @@ namespace BillingSystem.gRPC.Services
                 }).ConfigureAwait(false);
         }
 
-        public override Task<Coin> LongestHistoryCoin(None request, ServerCallContext context)
+        public override async Task<Coin> LongestHistoryCoin(None request, ServerCallContext context)
         {
-            return base.LongestHistoryCoin(request, context);
+            var response = await _billingRepository.LongestHistoryCoin();
+            return await Task.FromResult(new Coin { Id = response.Id, History = response.History}).ConfigureAwait(false);
         }
     }
 }

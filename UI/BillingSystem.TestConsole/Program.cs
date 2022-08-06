@@ -29,19 +29,23 @@ using (var clientData = client.ListUsers(none))
 //    }
 //}
 
-var response_2 = await client.MoveCoinsAsync(new MoveCoinsTransaction { SrcUser = "maria", DstUser = "oleg", Amount = 100 });
-Console.WriteLine(response_2);
+var response_3 = await client.LongestHistoryCoinAsync(new None());
 
-using (var clientData = client.ListUsers(none))
-{
-    while (await clientData.ResponseStream.MoveNext(new CancellationToken()))
-    {
-        var thisUserProfile = clientData.ResponseStream.Current;
-        Console.WriteLine(thisUserProfile);
-    }
-}
+Console.WriteLine(response_3);
+Console.ReadKey();
+//var response_2 = await client.MoveCoinsAsync(new MoveCoinsTransaction { SrcUser = "maria", DstUser = "oleg", Amount = 100 });
+//Console.WriteLine(response_2);
 
-Console.ReadLine();
+//using (var clientData = client.ListUsers(none))
+//{
+//    while (await clientData.ResponseStream.MoveNext(new CancellationToken()))
+//    {
+//        var thisUserProfile = clientData.ResponseStream.Current;
+//        Console.WriteLine(thisUserProfile);
+//    }
+//}
+
+//Console.ReadLine();
 
 
 

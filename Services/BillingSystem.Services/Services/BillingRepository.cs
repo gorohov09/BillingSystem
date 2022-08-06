@@ -91,6 +91,23 @@ namespace BillingSystem.Services.Services
             return true;
         }
 
+        public async Task<CoinViewModel> LongestHistoryCoin()
+        {
+            var coinsEntities = await GetCoins();
+            var historyEntities = coinsEntities.Select(x => new CoinViewModel { Id = x.Id, History = x.History}).ToList();
+            var maxId = GetIdCoinByLongestHistory(historyEntities);
+            if (maxId == 0)
+                return null;
+            var coin = await GetCoinById(maxId);
+            return coin != null ? new CoinViewModel { Id = coin.Id, History = coin.History} : null;
+        }
+
+        private int GetIdCoinByLongestHistory(List<CoinViewModel> coinsVm)
+        {
+            var maxHistory = coinsVm.Max(c => c.History.Split("-").Length);
+            var coinVm = coinsVm.FirstOrDefault(c => c.History.Split("-").Length == maxHistory);
+            return coinVm == null ? 0 : coinVm.Id;
+        }
         private async Task<Dictionary<string, int>> CountNumberCoinsForUserAsync(List<UserProfileViewModel> userProfilies, int emissionCount)
         {
             var result = new Dictionary<string, int>();
@@ -107,6 +124,9 @@ namespace BillingSystem.Services.Services
         private async Task<List<UserProfileDomain>> GetUserProfilies()
             => await _db.UserProfiles.ToListAsync();
 
+        private async Task<List<CoinDomain>> GetCoins()
+            => await _db.Coins.ToListAsync();
+
         private async Task<double> GetTotalRaiting()
             => await _db.UserProfiles.SumAsync(p => p.Rating);
 
@@ -122,6 +142,6 @@ namespace BillingSystem.Services.Services
             var userEntity = await GetUserProfileByName(nameUserProfile);
             return userEntity?.Coins.Take((int)amount)
                 .Select(c => new CoinViewModel { Id = c.Id, History = c.History });
-        }
+        } 
     }
 }
