@@ -19,7 +19,7 @@ namespace BillingSystem.Services.Services
             _logger = logger;
         }
 
-        public async Task<bool> CoinsEmission(long emissionAmount)
+        public async Task<ResponseViewModel> CoinsEmission(long emissionAmount)
         {
             var userProfilies = await GetUserProfilies();
             var userProfiliesVm = userProfilies.Select(p => new UserProfileViewModel
@@ -42,7 +42,7 @@ namespace BillingSystem.Services.Services
                 userProfile.Amount = item.Value;
             }
             await _db.SaveChangesAsync();
-            return true;
+            return new ResponseViewModel { StatusOperation = true, StatusMessage = "Эмиссия денег выполнена успешно"};
         }
 
         public async Task<IEnumerable<UserProfileViewModel>> GetUserProfiliesVm()
@@ -55,19 +55,19 @@ namespace BillingSystem.Services.Services
             });
         }
 
-        public async Task<bool> MoveCoins(string srcUser, string dstUser, long amount)
+        public async Task<ResponseViewModel> MoveCoins(string srcUser, string dstUser, long amount)
         {
             var srcUserEntity = await GetUserProfileByName(srcUser);
             var dstUserEntity = await GetUserProfileByName(dstUser);
 
             if (srcUserEntity == null || dstUserEntity == null)
-                return false;
+                return new ResponseViewModel { StatusOperation = false, StatusMessage = "Один из пользователей не найден в БД"};
             if (srcUserEntity.Amount < amount)
-                return false;
+                return new ResponseViewModel { StatusOperation = false, StatusMessage = $"У{srcUser} на балансе меньше {amount}м." };
 
             var coinsTransaction = await GetCoinsUserProfile(srcUserEntity.Name, amount);
             if (coinsTransaction == null)
-                return false;
+                return new ResponseViewModel { IsStatusUnspecified = true };
 
             var amountCoins = coinsTransaction.Count();
             await using (await _db.Database.BeginTransactionAsync())
@@ -88,7 +88,8 @@ namespace BillingSystem.Services.Services
                 await _db.Database.CommitTransactionAsync();
             }
 
-            return true;
+            return new ResponseViewModel { StatusOperation = true, 
+                StatusMessage = $"Перемещение {amount} мон. от {srcUser} к {dstUser} выполнено успешно" };
         }
 
         public async Task<CoinViewModel> LongestHistoryCoin()
@@ -121,21 +122,29 @@ namespace BillingSystem.Services.Services
             return result;
         }
 
-        private async Task<List<UserProfileDomain>> GetUserProfilies()
-            => await _db.UserProfiles.ToListAsync();
+        private async Task<List<UserProfileDomain>> GetUserProfilies() => 
+            await _db.UserProfiles
+            .ToListAsync()
+            .ConfigureAwait(false);
 
-        private async Task<List<CoinDomain>> GetCoins()
-            => await _db.Coins.ToListAsync();
+        private async Task<List<CoinDomain>> GetCoins() => 
+            await _db.Coins
+            .ToListAsync()
+            .ConfigureAwait(false);
 
-        private async Task<double> GetTotalRaiting()
-            => await _db.UserProfiles.SumAsync(p => p.Rating);
+        private async Task<double> GetTotalRaiting() => 
+            await _db.UserProfiles
+            .SumAsync(p => p.Rating)
+            .ConfigureAwait(false);
 
-        private async Task<UserProfileDomain?> GetUserProfileByName(string name)
-            => await _db.UserProfiles
+        private async Task<UserProfileDomain?> GetUserProfileByName(string name) => 
+            await _db.UserProfiles
                 .Include(p => p.Coins)
-                .FirstOrDefaultAsync(p => p.Name == name);
-        private async Task<CoinDomain?> GetCoinById(int id)
-            => await _db.Coins.FirstOrDefaultAsync(c => c.Id == id).ConfigureAwait(false);
+                .FirstOrDefaultAsync(p => p.Name == name).ConfigureAwait(false);
+        private async Task<CoinDomain?> GetCoinById(int id) => 
+            await _db.Coins
+            .FirstOrDefaultAsync(c => c.Id == id)
+            .ConfigureAwait(false);
 
         private async Task<IEnumerable<CoinViewModel>?> GetCoinsUserProfile(string nameUserProfile, long amount)
         {

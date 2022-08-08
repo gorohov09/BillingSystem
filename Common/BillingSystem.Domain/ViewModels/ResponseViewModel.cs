@@ -8,14 +8,9 @@ namespace BillingSystem.Domain.ViewModels
 {
     public class ResponseViewModel
     {
-        public enum Status
-        {
-            STATUS_UNSPECIFIED,
-            STATUS_OK,
-            STATUS_FAILED
-        }
+        public bool StatusOperation { get; set; }
 
-        public Status StatusOperation { get; set; }
+        public bool IsStatusUnspecified { get; set; }
 
         public string StatusMessage { get; set; }
     }
