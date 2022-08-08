@@ -17,24 +17,21 @@ using (var clientData = client.ListUsers(none))
     }
 }
 
-//var response_1 = await client.CoinsEmissionAsync(new EmissionAmount { Amount = 10});
-//Console.WriteLine(response_1);
+var response_1 = await client.CoinsEmissionAsync(new EmissionAmount { Amount = 10 });
+Console.WriteLine(response_1);
 
-//using (var clientData = client.ListUsers(none))
-//{
-//    while (await clientData.ResponseStream.MoveNext(new CancellationToken()))
-//    {
-//        var thisUserProfile = clientData.ResponseStream.Current;
-//        Console.WriteLine(thisUserProfile);
-//    }
-//}
+using (var clientData = client.ListUsers(none))
+{
+    while (await clientData.ResponseStream.MoveNext(new CancellationToken()))
+    {
+        var thisUserProfile = clientData.ResponseStream.Current;
+        Console.WriteLine(thisUserProfile);
+    }
+}
 
-var response_3 = await client.LongestHistoryCoinAsync(new None());
 
-Console.WriteLine(response_3);
-Console.ReadKey();
-//var response_2 = await client.MoveCoinsAsync(new MoveCoinsTransaction { SrcUser = "maria", DstUser = "oleg", Amount = 100 });
-//Console.WriteLine(response_2);
+var response_2 = await client.MoveCoinsAsync(new MoveCoinsTransaction { SrcUser = "bioris", DstUser = "maria", Amount = 4 });
+Console.WriteLine(response_2);
 
 //using (var clientData = client.ListUsers(none))
 //{
@@ -46,6 +43,11 @@ Console.ReadKey();
 //}
 
 //Console.ReadLine();
+
+var response_3 = await client.LongestHistoryCoinAsync(new None());
+
+Console.WriteLine(response_3);
+Console.ReadKey();
 
 
 

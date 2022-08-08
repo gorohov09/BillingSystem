@@ -39,7 +39,10 @@ namespace BillingSystem.Services.Services
                     {
                         History = $"Эмиссия-{userProfile.Name}"
                     });
-                userProfile.Amount = item.Value;
+                if (userProfile.Amount == null)
+                    userProfile.Amount = item.Value;
+                else
+                    userProfile.Amount += item.Value;
             }
             await _db.SaveChangesAsync();
             return new ResponseViewModel { StatusOperation = true, StatusMessage = "Эмиссия денег выполнена успешно"};
@@ -65,25 +68,23 @@ namespace BillingSystem.Services.Services
             if (srcUserEntity.Amount < amount)
                 return new ResponseViewModel { StatusOperation = false, StatusMessage = $"У{srcUser} на балансе меньше {amount}м." };
 
-            var coinsTransaction = await GetCoinsUserProfile(srcUserEntity.Name, amount);
-            if (coinsTransaction == null)
+            if (srcUserEntity?.Coins == null)
                 return new ResponseViewModel { IsStatusUnspecified = true };
 
-            var amountCoins = coinsTransaction.Count();
             await using (await _db.Database.BeginTransactionAsync())
             {
-                foreach (var coin in coinsTransaction)
+                int count = (int)amount;
+                foreach (var coin in srcUserEntity.Coins)
                 {
-                    var coinEntity = await GetCoinById(coin.Id);
-                    if (coinEntity == null)
-                        continue;
-                    coinEntity.UserProfile = dstUserEntity;
+                    if (count == 0) break;
+                    coin.UserProfile = dstUserEntity;
                     StringBuilder sb = new StringBuilder(coin.History);
                     sb.Append($"-{dstUser}");
-                    coinEntity.History = sb.ToString();
+                    coin.History = sb.ToString();
+                    count--;
                 }
-                srcUserEntity.Amount -= amountCoins;
-                dstUserEntity.Amount += amountCoins;
+                srcUserEntity.Amount -= amount;
+                dstUserEntity.Amount += amount;
                 await _db.SaveChangesAsync();
                 await _db.Database.CommitTransactionAsync();
             }
@@ -145,12 +146,5 @@ namespace BillingSystem.Services.Services
             await _db.Coins
             .FirstOrDefaultAsync(c => c.Id == id)
             .ConfigureAwait(false);
-
-        private async Task<IEnumerable<CoinViewModel>?> GetCoinsUserProfile(string nameUserProfile, long amount)
-        {
-            var userEntity = await GetUserProfileByName(nameUserProfile);
-            return userEntity?.Coins.Take((int)amount)
-                .Select(c => new CoinViewModel { Id = c.Id, History = c.History });
-        } 
     }
 }
